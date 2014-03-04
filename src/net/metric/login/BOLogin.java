@@ -3,6 +3,7 @@ package net.metric.login;
 import java.util.Iterator;
 
 import com.businessobjects.enterprise.infoobject.InfoObjects;
+import com.businessobjects.sdk.plugin.desktop.publication.IPublication;
 import com.crystaldecisions.sdk.exception.SDKException;
 import com.crystaldecisions.sdk.framework.CrystalEnterprise;
 import com.crystaldecisions.sdk.framework.IEnterpriseSession;
@@ -42,6 +43,7 @@ import com.crystaldecisions.sdk.plugin.desktop.report.IReport;
 import com.crystaldecisions.sdk.plugin.desktop.user.IUser;
 import com.crystaldecisions.sdk.plugin.desktop.usergroup.IUserGroup;
 
+import java.util.List;
 import java.util.Map;
 import java.util.Iterator;
 import java.util.Set;
@@ -336,17 +338,7 @@ public static void ScheduleReportByDate(IInfoStore infoStore){
 
 // Bir Yayýn Oluþtur
 
-public static void createPublication(IInfoStore infoStore){
-	String folderQuery="SELECT SI_ID FROM CI_INFOOBJECT WHERE SI_KIND='"+CeKind.FOLDER+"' AND SI_NAME='Feature Samples'";
-	try {
-		IInfoObjects folders=infoStore.query(folderQuery);
-		IInfoObject folder=(IInfoObject)folders.get(0);
-	} catch (SDKException e) {
-		// TODO Auto-generated catch block
-		e.printStackTrace();
-	}
-	
-}
+
 
 
  public static void main(String[] args) {
@@ -362,6 +354,50 @@ public static void createPublication(IInfoStore infoStore){
 		
 		IUser iUser=GetUsers(infoStore);
 		
+		
+		MdlPublication mdlPublication=new MdlPublication();
+		
+		// Publication Parent Folder'ý alýr...
+		String si_name="Feature Samples";
+		List iPublications=mdlPublication.getPublications(infoStore,si_name);
+		
+		
+		IInfoObject iInfoObject=(IInfoObject)iPublications.get(0);
+		
+		
+		// PUBLICATION OLUÞTURMA
+		//boolean pub=mdlPublication.createPublication(infoStore,iInfoObject);
+		//System.out.println(pub);
+		
+		// PUBLICATION SÝLME
+		// Publication name = "Sahin Title";
+		String pub_name="Sahin Title";
+		//mdlPublication.deletePublication(infoStore, si_name, pub_name);
+		
+		//PUBLICATION DOSYA EKLEME
+		//Boolean kaydet=mdlPublication.addPublicationDoc(infoStore,pub_name);
+		//System.out.println(kaydet);
+		
+		// PUBLICATION'a kullanýcý Ata. Þimdilik sahinyanlik Kullanýcýsýný atar
+		//Boolean userAta=mdlPublication.addPublicationUser(infoStore,pub_name);
+		//System.out.println(userAta);
+		
+		
+		// PUBLICATION'a Grup Ata
+		Boolean grupAta=mdlPublication.addPublicationGroup(infoStore,pub_name);
+		System.out.println(grupAta);
+		
+		
+		
+		
+		/* 
+		Iterator iT=iPublications.iterator();
+		while(iT.hasNext()){
+			IPublication iPublication=(IPublication) iT.next();
+			System.out.println(iPublication.getTitle());
+		}
+		*/
+		
 		//GetUsers(infoStore);
 		//GetGroups(infoStore);
 		//CreateUser(infoStore);
@@ -369,7 +405,7 @@ public static void createPublication(IInfoStore infoStore){
 		//rightControls(infoStore);
 		//setRights(infoStore,iUser);
 		//ScheduleReport(infoStore);
-		ScheduleReportByDate(infoStore);
+		//ScheduleReportByDate(infoStore);
 		System.out.println("Connection is Successfull");
 		}
 	} 
